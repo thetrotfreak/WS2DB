@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -25,13 +25,13 @@ jobs:
       # upgrade pip
       - name: Upgrade pip
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+          python.exe -m pip install --upgrade pip
+          python.exe -m pip install -r requirements.txt
      
       - name: Create windows binary
         run: |
-          cd ./scripts/
-          python3 ./build-exe.py
+          cd .\scripts\
+          python3 build-exe.py
           
       - name: Create Release
         id: create_release
@@ -40,14 +40,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: WS2DB ${{ github.ref }}
+          release_name: WS2DB ${{ github.ref_name }}
           draft: false
           prerelease: false
           
       - name: Upload artifacts
-        uses: skx/github-action-publish-binaries@master
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ steps.create_release.outputs.id }}
-          args: '.scripts/WS2DB.zip'
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .\WS2DB.zip
+          asset_name: WS2DB.zip
+          asset_content_type: application/zip
