@@ -24,17 +24,18 @@ jobs:
       
       # upgrade pip
       - name: Upgrade pip
+        shell: pwsh
         run: |
           python.exe -m pip install wheel
           python.exe -m pip install --upgrade pip
           python.exe -m pip install -r requirements.txt
      
       - name: Create windows binary
+        shell: pwsh
         run: |
           cd .\scripts\
           python.exe build-exe.py
-          $ARTIFACT_PATH=Get-ChildItem -Path .\WS2DB.zip | Select-Object -ExpandProperty FullName
-          Write-Output ARTIFACT_PATH=$ARTIFACT_PATH >> $GITHUB_ENV
+          "{ARTIFACT_PATH}={$(Get-ChildItem -Path .\WS2DB.zip | Select-Object -ExpandProperty FullName)}" >> $env:GITHUB_ENV
           
       - name: Create Release
         id: create_release
