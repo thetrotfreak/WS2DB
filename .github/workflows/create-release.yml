@@ -25,13 +25,14 @@ jobs:
       # upgrade pip
       - name: Upgrade pip
         run: |
+          python.exe -m pip install wheel
           python.exe -m pip install --upgrade pip
           python.exe -m pip install -r requirements.txt
      
       - name: Create windows binary
         run: |
           cd .\scripts\
-          python3 build-exe.py
+          python.exe build-exe.py
           
       - name: Create Release
         id: create_release
@@ -40,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: WS2DB ${{ github.ref_name }}
+          release_name: WS2DB
           draft: false
           prerelease: false
           
