@@ -20,7 +20,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
       - uses: actions/checkout@v3
       
       # upgrade pip
@@ -29,12 +28,12 @@ jobs:
       
       # install pip requirements
       - name: Install dependencies
-        run: python.exe -m pip install -r requirements.txt
+        run: python.exe -m pip install -r .\requirements.txt
      
       - name: Create windows binary
         run: |
-          cd ./scripts
-          python.exe build-exe.py
+          cd .\scripts\
+          python.exe .\build-exe.py
           
       - name: Create Release
         id: create_release
@@ -53,4 +52,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ steps.create_release.outputs.id }}
-          args: '.\scripts\WS2DB.zip'
+          args: '*.zip'
