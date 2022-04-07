@@ -52,6 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .\WS2DB.zip
+          asset_path: WS2DB.zip
           asset_name: WS2DB.zip
           asset_content_type: application/zip
