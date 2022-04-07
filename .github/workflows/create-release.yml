@@ -20,37 +20,42 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
       - uses: actions/checkout@v3
       
       # upgrade pip
       - name: Upgrade pip
-        run: python.exe -m pip install --upgrade pip
-      
-      # install pip requirements
-      - name: Install dependencies
-        run: python.exe -m pip install -r requirements.txt
+        shell: pwsh
+        run: |
+          python.exe -m pip install wheel
+          python.exe -m pip install --upgrade pip
+          python.exe -m pip install -r requirements.txt
      
       - name: Create windows binary
+        shell: pwsh
         run: |
-          cd ./scripts
+          cd .\scripts\
           python.exe build-exe.py
+          "{ARTIFACT_PATH}={$(Get-ChildItem -Path .\WS2DB.zip | Select-Object -ExpandProperty FullName)}" >> $env:GITHUB_ENV
           
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOEKN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: WS2DB ${{ github.ref }}
+          release_name: WS2DB
           draft: false
           prerelease: false
           
       - name: Upload artifacts
-        uses: skx/github-action-publish-binaries@master
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ steps.create_release.outputs.id }}
-          args: '.\scripts\WS2DB.zip'
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          # asset_path: ${{ env.ARTIFACT_PATH }}
+          asset_path: .\scripts\WS2DB.zip
+          asset_name: WS2DB.zip
+          asset_content_type: application/zip
