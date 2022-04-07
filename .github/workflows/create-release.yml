@@ -24,16 +24,16 @@ jobs:
       
       # upgrade pip
       - name: Upgrade pip
-        run: python.exe -m pip install --upgrade pip
+        run: python3 -m pip install --upgrade pip
       
       # install pip requirements
       - name: Install dependencies
-        run: python.exe -m pip install -r .\requirements.txt
+        run: python3 -m pip install -r .\requirements.txt
      
       - name: Create windows binary
         run: |
-          cd .\scripts\
-          python.exe .\build-exe.py
+          cd ./scripts/
+          python3 ./build-exe.py
           
       - name: Create Release
         id: create_release
@@ -52,4 +52,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ steps.create_release.outputs.id }}
-          args: '*.zip'
+          args: '.scripts/WS2DB.zip'
