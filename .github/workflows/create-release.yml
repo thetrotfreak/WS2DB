@@ -35,7 +35,7 @@ jobs:
         run: |
           cd .\scripts\
           python.exe build-exe.py
-          "{ARTIFACT_PATH}={$(Get-ChildItem -Path .\WS2DB.zip | Select-Object -ExpandProperty FullName)}" >> $env:GITHUB_ENV
+        #   "{ARTIFACT_PATH}={$(Get-ChildItem -Path .\WS2DB.zip | Select-Object -ExpandProperty FullName)}" >> $env:GITHUB_ENV
           
       - name: Create Release
         id: create_release
@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          # asset_path: ${{ env.ARTIFACT_PATH }}
+        #   asset_path: ${{ env.ARTIFACT_PATH }}
           asset_path: .\scripts\WS2DB.zip
           asset_name: WS2DB.zip
           asset_content_type: application/zip
