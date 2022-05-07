@@ -6,31 +6,27 @@ from PIL import Image
 
 path_src = WindowsPath(
     r'~\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets').expanduser()
-app_dir = PureWindowsPath(argv[0]).parent
-path_dst = WindowsPath(app_dir).joinpath(r'Assets')
+path_dst = WindowsPath(r'~\OneDrive\Pictures').expanduser()
 
 
-def setup():
-    if path_dst.exists():
-        pass
-    else:
-        path_dst.mkdir()
+def setup_dst():
+    if not path_dst.exists():
+        path_dst_alternate = WindowsPath().cwd().parent.joinpath(r'Spotlight')
+        path_dst_alternate.mkdir()
 
 
 def main():
-    for child in path_src.iterdir():
-        new_child = path_dst.joinpath(child.name)
-        if new_child.exists() or new_child.with_suffix('.jpg').exists():
-            pass
-        else:
-            copy2(child, path_dst)
-            image_path = new_child.rename(new_child.with_suffix('.jpg'))
+    for child_src in path_src.iterdir():
+        child_dst = path_dst.joinpath(child_src.name)
+        if not child_dst.exists() or not child_dst.with_suffix('.jpg').exists():
+            copy2(child_src, path_dst)
+            image_path = child_dst.rename(child_dst.with_suffix('.jpg'))
             with Image.open(image_path) as image:
-                if image.width != 1920:
+                if image.width < image.height:
                     image.close()
                     image_path.unlink()
 
 
 if __name__ == '__main__':
-    setup()
+    setup_dst()
     main()
