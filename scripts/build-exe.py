@@ -7,7 +7,7 @@ if __name__ == '__main__':
     APP_NAME = r'WS2DB'
     APP_DIR = pathlib.PureWindowsPath(__file__).parents[1]
     APP_PATH = APP_DIR.joinpath(f'{APP_NAME}', f'{APP_NAME}.py')
-    ICON_PATH = APP_DIR.joinpath(r'icons', '96x96.ico')
+    ICON_PATH = APP_DIR.joinpath(r'icons', 'spotlight.ico')
     DIST_DIR = pathlib.WindowsPath(APP_DIR.joinpath(r'release'))
     try:
         DIST_DIR.mkdir(exist_ok=True)
