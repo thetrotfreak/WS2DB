@@ -1,6 +1,5 @@
-from pathlib import WindowsPath, PureWindowsPath
+from pathlib import WindowsPath
 from shutil import copy2
-from sys import argv
 
 from PIL import Image
 
@@ -18,13 +17,18 @@ def setup_dst():
 def main():
     for child_src in path_src.iterdir():
         child_dst = path_dst.joinpath(child_src.name)
-        if not child_dst.exists() or not child_dst.with_suffix('.jpg').exists():
+        if child_dst.exists() or child_dst.with_suffix('.jpg').exists():
+            pass
+        else:
             copy2(child_src, path_dst)
-            image_path = child_dst.rename(child_dst.with_suffix('.jpg'))
-            with Image.open(image_path) as image:
-                if image.width < image.height:
-                    image.close()
-                    image_path.unlink()
+            try:
+                image_path = child_dst.rename(child_dst.with_suffix('.jpg'))
+                with Image.open(image_path) as image:
+                    if image.width < image.height:
+                        image.close()
+                        image_path.unlink()
+            except FileExistsError:
+                pass
 
 
 if __name__ == '__main__':
